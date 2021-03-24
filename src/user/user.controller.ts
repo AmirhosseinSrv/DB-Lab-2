@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, Header, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Header, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import CreateUserDto from './dto/create-user.dto';
-import { ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { ApiQuery, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('users')
 export class UserController {
@@ -14,13 +15,17 @@ export class UserController {
     return this.usersService.insert(user);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Header('Content-Type', 'application/json')
   @ApiResponse({ status: 200, description: 'Get All User.' })
   @Get()
   getAll() {
     return this.usersService.getAllUsers();
   }
-
+  
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Header('Content-Type', 'application/json')
   @ApiResponse({ status: 200, description: 'Delete User.' })
   @ApiQuery({
@@ -33,6 +38,8 @@ export class UserController {
     return this.usersService.delete(userID);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Header('Content-Type', 'application/json')
   @ApiResponse({ status: 200, description: 'Update User.' })
   @ApiQuery({
@@ -45,6 +52,8 @@ export class UserController {
     return this.usersService.update(user, userID);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Header('Content-Type', 'application/json')
   @ApiResponse({ status: 200, description: 'Get All User\'s Books.' })
   @ApiQuery({

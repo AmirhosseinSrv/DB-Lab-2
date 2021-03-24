@@ -1,13 +1,16 @@
 
-import { Body, Controller, Get, Post, Header, Delete, Query, Put } from '@nestjs/common';
+import { Body, Controller, Get, Post, Header, Delete, Query, Put, UseGuards } from '@nestjs/common';
 import BookService from './book.service';
 import CreateBookDto from './dto/create-book.dto';
-import { ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { ApiQuery, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('book')
 export default class BookController {
   constructor(private readonly bookService: BookService) {}
   
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Header('Content-Type', 'application/json')
   @ApiResponse({ status: 200, description: 'Create Book.' })
   @Post('post')
@@ -15,6 +18,8 @@ export default class BookController {
     return this.bookService.insert(book);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Header('Content-Type', 'application/json')
   @ApiResponse({ status: 200, description: 'Delete Book.' })
   @ApiQuery({
@@ -27,6 +32,8 @@ export default class BookController {
     return this.bookService.delete(bookID);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Header('Content-Type', 'application/json')
   @ApiResponse({ status: 200, description: 'Update Book.' })
   @ApiQuery({
@@ -39,6 +46,8 @@ export default class BookController {
     return this.bookService.update(book, bookID);
   }
   
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Header('Content-Type', 'application/json')
   @ApiResponse({ status: 200, description: 'Get All Books.' })
   @Get()
