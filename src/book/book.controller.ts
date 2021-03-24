@@ -1,8 +1,8 @@
 
-import { Body, Controller, Get, Post, Header } from '@nestjs/common';
+import { Body, Controller, Get, Post, Header, Delete, Query, Put } from '@nestjs/common';
 import BookService from './book.service';
 import CreateBookDto from './dto/create-book.dto';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiQuery, ApiResponse } from '@nestjs/swagger';
 
 @Controller('book')
 export default class BookController {
@@ -11,8 +11,32 @@ export default class BookController {
   @Header('Content-Type', 'application/json')
   @ApiResponse({ status: 200, description: 'Create Book.' })
   @Post('post')
-  postGenre( @Body() book: CreateBookDto) {
+  postBook( @Body() book: CreateBookDto) {
     return this.bookService.insert(book);
+  }
+
+  @Header('Content-Type', 'application/json')
+  @ApiResponse({ status: 200, description: 'Delete Book.' })
+  @ApiQuery({
+    name: 'bookId',
+    required: true,
+    type: Number
+  })
+  @Delete('delete')
+  deleteBook( @Query('bookId') bookID: number) {
+    return this.bookService.delete(bookID);
+  }
+
+  @Header('Content-Type', 'application/json')
+  @ApiResponse({ status: 200, description: 'Update Book.' })
+  @ApiQuery({
+    name: 'bookId',
+    required: true,
+    type: Number
+  })
+  @Put('put')
+  updateBook( @Body() book: CreateBookDto, @Query('bookId') bookID: number) {
+    return this.bookService.update(book, bookID);
   }
   
   @Header('Content-Type', 'application/json')

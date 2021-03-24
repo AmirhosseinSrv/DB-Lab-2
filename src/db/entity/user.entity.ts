@@ -1,6 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany } from 'typeorm';
 import BookEntity from './book.entity';
-import GenreEntity from './genre.entity';
 
 @Entity()
 export default class UserEntity extends BaseEntity {

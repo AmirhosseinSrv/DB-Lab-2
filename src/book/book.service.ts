@@ -15,10 +15,30 @@ export default class BookService {
     book.genres = [];
     for ( let i = 0; i < genreIDs.length ; i++)
     {
-             const genre = await GenreEntity.findOne(genreIDs[i]);
-             book.genres.push(genre);
+      const genre = await GenreEntity.findOne(genreIDs[i]);
+      book.genres.push(genre);
     }
     await book.save();
+    return book;
+  }
+
+  async delete(bookID: number): Promise<Object> {
+    const book: BookEntity = await BookEntity.findOne({where: {id: bookID}});
+    await BookEntity.delete(book);
+    return { "success": true };
+  }
+
+  async update(bookDetails: CreateBookDto, bookID: number): Promise<BookEntity> {
+    const book: BookEntity = await BookEntity.findOne({where: {id: bookID}});
+    book.name = bookDetails.name;
+    book.user = await UserEntity.findOne({where: {id: bookDetails.userID}});
+    let genreEntities: GenreEntity[];
+    bookDetails.genreIDs.map(async (genreID: number) => {
+      const genreEntity: GenreEntity = await GenreEntity.findOne({where: {id: genreID}});
+      genreEntities.push(genreEntity);
+    });
+    book.genres = genreEntities;
+    await BookEntity.save(book);
     return book;
   }
 

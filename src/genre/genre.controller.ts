@@ -1,8 +1,8 @@
 
-import { Body, Controller, Get, Header, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Header, Post, Put, Query } from '@nestjs/common';
 import GenreService from './genre.service';
 import CreateGenreDto from './dto/create-genre.dto';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiQuery, ApiResponse } from '@nestjs/swagger';
 
 @Controller('genre')
 export default class GenreController {
@@ -13,6 +13,30 @@ export default class GenreController {
   @Post('post')
   postGenre( @Body() genre: CreateGenreDto) {
     return this.genreService.insert(genre);
+  }
+
+  @Header('Content-Type', 'application/json')
+  @ApiResponse({ status: 200, description: 'Delete Genre.' })
+  @ApiQuery({
+    name: 'genreId',
+    required: true,
+    type: Number
+  })
+  @Delete('delete')
+  deleteGenre( @Query('genreId') genreID: number) {
+    return this.genreService.delete(genreID);
+  }
+
+  @Header('Content-Type', 'application/json')
+  @ApiResponse({ status: 200, description: 'Update Genre.' })
+  @ApiQuery({
+    name: 'genreId',
+    required: true,
+    type: Number
+  })
+  @Put('put')
+  updateGenre( @Body() genre: CreateGenreDto, @Query('genreId') genreID: number) {
+    return this.genreService.update(genre, genreID);
   }
   
   @Header('Content-Type', 'application/json')
