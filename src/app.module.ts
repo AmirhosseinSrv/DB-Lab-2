@@ -4,20 +4,23 @@ import { AppService } from './app.service';
 import { UserModule } from './User/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
+import { JobseekersModule } from './jobseekers/jobseekers.module';
+import { ProjectModule } from './project/project.module';
+import { ProjectRequestModule } from './project-request/project-request.module';
 import UserEntity from './db/entity/user.entity';
-import BookModule from './Book/book.module';
-import GenreModule from './Genre/genre.module';
-import BookEntity from './db/entity/book.entity';
-import GenreEntity from './db/entity/genre.entity';
+import ProjectEntity from './db/entity/project.entity';
+import ProjectRequestEntity from './db/entity/project-request.entity';
+import FreelancerEntity from './db/entity/freelancer.entity';
+import EmployerEntity from './db/entity/employer.entity';
 
 @Module({
   imports: [
-    UserModule ,
-    BookModule,
-    GenreModule,
-    AuthModule,
+    UserModule,
+    JobseekersModule,
+    ProjectModule,
+    ProjectRequestModule,
     TypeOrmModule.forFeature(
-      [UserEntity, BookEntity , GenreEntity],
+      [UserEntity, FreelancerEntity, EmployerEntity, ProjectEntity , ProjectRequestEntity],
     ),
     TypeOrmModule.forRoot(),
     AuthModule,

@@ -1,68 +1,145 @@
 import { Body, Controller, Delete, Get, Header, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-import CreateUserDto from './dto/create-user.dto';
 import { ApiQuery, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import CreateFreelancerDto from 'src/jobseekers/dto/create-freelancer.dto';
+import CreateEmployerDto from 'src/jobseekers/dto/create-employer.dto';
 
-@Controller('users')
+@Controller('user')
 export class UserController {
-  constructor(private readonly usersService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
   @Header('Content-Type', 'application/json')
-  @ApiResponse({ status: 200, description: 'Create User.' })
-  @Post('post')
-  postUser( @Body() user: CreateUserDto) {
-    return this.usersService.insert(user);
+  @ApiResponse({ status: 200, description: 'Create Freelancer.' })
+  @Post('freelancers')
+  createFreelancer( @Body() freelancer: CreateFreelancerDto) {
+    return this.userService.createFreelancer(freelancer);
+  }
+
+  @Header('Content-Type', 'application/json')
+  @ApiResponse({ status: 200, description: 'Create Employer.' })
+  @Post('employers')
+  createEmployer( @Body() employer: CreateEmployerDto) {
+    return this.userService.createEmployer(employer);
   }
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Header('Content-Type', 'application/json')
-  @ApiResponse({ status: 200, description: 'Get All User.' })
-  @Get()
-  getAll() {
-    return this.usersService.getAllUsers();
+  @ApiResponse({ status: 200, description: 'Get All Freelancers.' })
+  @Get('freelancers')
+  getAllFreelancers() {
+    return this.userService.getAllFreelancers();
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Header('Content-Type', 'application/json')
+  @ApiResponse({ status: 200, description: 'Get All Employers.' })
+  @Get('employers')
+  getAllEmployers() {
+    return this.userService.getAllEmployers();
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Header('Content-Type', 'application/json')
+  @ApiResponse({ status: 200, description: 'Get Freelancer.' })
+  @ApiQuery({
+    name: 'userId',
+    required: true,
+    type: String
+  })
+  @Get('freelancer')
+  getFreelancer(@Query('userId') userId: string) {
+    return this.userService.getFreelancer(userId);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Header('Content-Type', 'application/json')
+  @ApiResponse({ status: 200, description: 'Get Employer.' })
+  @ApiQuery({
+    name: 'userId',
+    required: true,
+    type: String
+  })
+  @Get('employer')
+  getEmployer(@Query('userId') userId: string) {
+    return this.userService.getEmployer(userId);
   }
   
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Header('Content-Type', 'application/json')
-  @ApiResponse({ status: 200, description: 'Delete User.' })
+  @ApiResponse({ status: 200, description: 'Delete Freelancer.' })
   @ApiQuery({
     name: 'userId',
     required: true,
-    type: Number
+    type: String
   })
-  @Delete('delete')
-  deleteUser( @Query('userId') userID: number) {
-    return this.usersService.delete(userID);
+  @Delete('freelancer')
+  deleteFreelancer( @Query('userId') userId: string) {
+    return this.userService.deleteFreelancer(userId);
   }
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Header('Content-Type', 'application/json')
-  @ApiResponse({ status: 200, description: 'Update User.' })
+  @ApiResponse({ status: 200, description: 'Delete Employer.' })
   @ApiQuery({
     name: 'userId',
     required: true,
-    type: Number
+    type: String
   })
-  @Put('put')
-  updateUser( @Body() user: CreateUserDto, @Query('userId') userID: number) {
-    return this.usersService.update(user, userID);
+  @Delete('employer')
+  deleteEmployer( @Query('userId') userId: string) {
+    return this.userService.deleteEmployer(userId);
   }
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Header('Content-Type', 'application/json')
-  @ApiResponse({ status: 200, description: 'Get All User\'s Books.' })
+  @ApiResponse({ status: 200, description: 'Delete All Freelancers.' })
+  @Delete('freelancers')
+  deleteAllFreelancers() {
+    return this.userService.deleteAllFreelancers();
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Header('Content-Type', 'application/json')
+  @ApiResponse({ status: 200, description: 'Delete All Employers.' })
+  @Delete('employers')
+  deleteAllEmployers() {
+    return this.userService.deleteAllEmployers();
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Header('Content-Type', 'application/json')
+  @ApiResponse({ status: 200, description: 'Update Freelancer.' })
   @ApiQuery({
     name: 'userId',
     required: true,
-    type: Number
+    type: String
   })
-  @Get('books')
-  getBooks( @Query('userId') userID: number ) {
-    return this.usersService.getBooksOfUser(userID);
+  @Put('freelancer')
+  updateFreelacer( @Body() freelancer: CreateFreelancerDto, @Query('userId') userId: string) {
+    return this.userService.updateFreelancer(freelancer, userId);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Header('Content-Type', 'application/json')
+  @ApiResponse({ status: 200, description: 'Update Employer.' })
+  @ApiQuery({
+    name: 'userId',
+    required: true,
+    type: String
+  })
+  @Put('employer')
+  updateUser( @Body() employer: CreateEmployerDto, @Query('userId') userId: string) {
+    return this.userService.updateEmployer(employer, userId);
   }
 }
